@@ -54,43 +54,74 @@ void vinogradSimpleMult(const double* g, const double* d, double* res)
 
 int main (int argc, const char * argv[])
 {
-    
 	int i;
 	double c[7];
 	double a[4];
 	double b[4];
+    bool turn; // 1 for vinograd, 0 for standart
     clock_t tStart, tFinish;
     float standartTime,vinogradTime;
     
+    //задание многочленов
 	for (i=0;i<4;i++){
 		a[i]=(double) i+1;
-		b[i]=(double) i+4;
+		b[i]=(double) 4+i;
 	}
     
-    tStart = clock();
-    vinogradSimpleMult(a,b,c);
-    tFinish = clock();
-    standartTime =(float) (tFinish - tStart) / CLOCKS_PER_SEC;
-    std::cout << "vinogradTime: " << standartTime<<" sec\n";
-    for (i=0;i<7;i++)
-        std::cout <<"c["<<i<<"]="<<c[i]<<"\n";    
+    turn=0;
+    
+    if (turn){
+        tStart = clock();
+        vinogradSimpleMult(a,b,c);
+        tFinish = clock();
+        vinogradTime =(float) (tFinish - tStart) / CLOCKS_PER_SEC;
+        std::cout << "vinogradTime: " << vinogradTime<<" sec\n";
+        for (i=0;i<7;i++)
+            std::cout <<"c["<<i<<"]="<<c[i]<<"\n";
+        
+        std::cout <<"\n";
+        
+        tStart = clock();
+        Multiplication(a,b,c);
+        tFinish = clock();
+        standartTime = (float)  (tFinish - tStart) / CLOCKS_PER_SEC;
+        std::cout << "standartTime: " << standartTime<<" sec\n";
+        for (i=0;i<7;i++)
+            std::cout <<"c["<<i<<"]="<<c[i]<<"\n";
+        
+        std::cout << "\ndiff: vin/std= " << vinogradTime/standartTime<<" times\n";
+
+    }
+    else{
+        tStart = clock();
+        Multiplication(a,b,c);
+        tFinish = clock();
+        standartTime = (float)  (tFinish - tStart) / CLOCKS_PER_SEC;
+        std::cout << "standartTime: " << standartTime<<" sec\n";
+        for (i=0;i<7;i++)
+            std::cout <<"c["<<i<<"]="<<c[i]<<"\n";
+
+        std::cout <<"\n";
+        
+        tStart = clock();
+        vinogradSimpleMult(a,b,c);
+        tFinish = clock();
+        vinogradTime =(float) (tFinish - tStart) / CLOCKS_PER_SEC;
+        std::cout << "vinogradTime: " << vinogradTime<<" sec\n";
+        for (i=0;i<7;i++)
+            std::cout <<"c["<<i<<"]="<<c[i]<<"\n";
+        
+        std::cout << "\ndiff: vin/std= " << vinogradTime/standartTime<<" times\n";
+    }
     
     
-    std::cout <<"\n";
     
     
-    tStart = clock();
-    Multiplication(a,b,c);
-    tFinish = clock();
-    vinogradTime = (float)  (tFinish - tStart) / CLOCKS_PER_SEC;
-    std::cout << "standartTime: " << vinogradTime<<" sec\n";
-    for (i=0;i<7;i++)
-        std::cout <<"c["<<i<<"]="<<c[i]<<"\n";
-  
     
     
-    std::cout << "\ndiff: vin/std= " << vinogradTime/standartTime<<" times\n";
-    return 0;
+    
+    
+        return 0;
 }
 
 
