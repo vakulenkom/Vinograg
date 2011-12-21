@@ -10,7 +10,7 @@
 
 void vinogradSimpleMult(const double* g, const double* d, double* res)
 { 
-    double c0=(d[0]+d[1]+d[2]+d[3])*(d[0]+d[1]+d[2]+d[3])*1/6;
+    double c0=(d[0]+d[1]+d[2]+d[3])*(g[0]+g[1]+g[2]+g[3])/6;
     double c1=g[0]*d[0];
     double c2=(g[0]+g[1])*(d[0]+d[1]);
     double c3=g[1]*d[1];
