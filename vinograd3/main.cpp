@@ -22,16 +22,16 @@ void Multiplication(const double* a, const double* b, double* res){
 
 void vinogradSimpleMult(const double* g, const double* d, double* res)
 { 
-    double c0=(d[0]+d[1]+d[2]+d[3])*(g[0]+g[1]+g[2]+g[3])/6;
+    double c0=(d[0]+d[1]+d[2]+d[3])*(g[0]+g[1]+g[2]+g[3])*0.33333*0.5;
     double c1=g[0]*d[0];
     double c2=(g[0]+g[1])*(d[0]+d[1]);
     double c3=g[1]*d[1];
     double c4=(g[0]+g[1]-g[2]-g[3])*(d[0]+d[1]-d[2]-d[3])*0.5;
     double c5=(g[0]-g[2])*(d[0]-d[2])*0.5;
     double c6=(g[1]-g[3])*(d[1]-d[3])*0.5;
-    double c7=(g[1]-g[2])*(d[1]-d[2])/3;
-    double c8=(g[0]-g[2]+g[3])*(d[0]-d[2]+d[3])/3;
-    double c9=(g[0]+g[1]-2*g[2]+g[3])*(d[0]+d[1]-2*d[2]+d[3])/3;
+    double c7=(g[1]-g[2])*(d[1]-d[2])*0.33333;
+    double c8=(g[0]-g[2]+g[3])*(d[0]-d[2]+d[3])*0.33333;
+    double c9=(g[0]+g[1]-2*g[2]+g[3])*(d[0]+d[1]-2*d[2]+d[3])*0.33333;
     
     //current vesion of m(x) is (x-1)*x^2*(x^2+1)*(x^2-x+1)
     // L[i] - вспомогательные переменные дл€ уменьшени€ количества умножений 
@@ -39,8 +39,6 @@ void vinogradSimpleMult(const double* g, const double* d, double* res)
     double L1 = c2 - c3;
     double L2 = c1 - c2 + c3;
     double L3 = c1 - c4;
-    
-    //_ASSERT(_CrtCheckMemory());
     
     res[0] = c1;
     res[1] = -c1 + L1;
@@ -58,9 +56,6 @@ int main (int argc, const char * argv[])
 	double c[7];
 	double a[4];
 	double b[4];
-    bool turn; // 1 for vinograd, 0 for standart
-    clock_t tStart, tFinish;
-    float standartTime,vinogradTime;
     
     //задание многочленов
 	for (i=0;i<4;i++){
@@ -68,58 +63,18 @@ int main (int argc, const char * argv[])
 		b[i]=(double) 4+i;
 	}
     
-    turn=0;
+    Multiplication(a,b,c);
     
-    if (turn){
-        tStart = clock();
-        vinogradSimpleMult(a,b,c);
-        tFinish = clock();
-        vinogradTime =(float) (tFinish - tStart) / CLOCKS_PER_SEC;
-        std::cout << "vinogradTime: " << vinogradTime<<" sec\n";
-        for (i=0;i<7;i++)
-            std::cout <<"c["<<i<<"]="<<c[i]<<"\n";
+    vinogradSimpleMult(a,b,c);
+//    for (i=0;i<7;i++)
+//        std::cout <<"c["<<i<<"]="<<c[i]<<"\n";
+    
+    std::cout <<"\n";
+    
+    Multiplication(a,b,c);
+//    for (i=0;i<7;i++)
+//        std::cout <<"c["<<i<<"]="<<c[i]<<"\n";
         
-        std::cout <<"\n";
-        
-        tStart = clock();
-        Multiplication(a,b,c);
-        tFinish = clock();
-        standartTime = (float)  (tFinish - tStart) / CLOCKS_PER_SEC;
-        std::cout << "standartTime: " << standartTime<<" sec\n";
-        for (i=0;i<7;i++)
-            std::cout <<"c["<<i<<"]="<<c[i]<<"\n";
-        
-        std::cout << "\ndiff: vin/std= " << vinogradTime/standartTime<<" times\n";
-
-    }
-    else{
-        tStart = clock();
-        Multiplication(a,b,c);
-        tFinish = clock();
-        standartTime = (float)  (tFinish - tStart) / CLOCKS_PER_SEC;
-        std::cout << "standartTime: " << standartTime<<" sec\n";
-        for (i=0;i<7;i++)
-            std::cout <<"c["<<i<<"]="<<c[i]<<"\n";
-
-        std::cout <<"\n";
-        
-        tStart = clock();
-        vinogradSimpleMult(a,b,c);
-        tFinish = clock();
-        vinogradTime =(float) (tFinish - tStart) / CLOCKS_PER_SEC;
-        std::cout << "vinogradTime: " << vinogradTime<<" sec\n";
-        for (i=0;i<7;i++)
-            std::cout <<"c["<<i<<"]="<<c[i]<<"\n";
-        
-        std::cout << "\ndiff: vin/std= " << vinogradTime/standartTime<<" times\n";
-    }
-    
-    
-    
-    
-    
-    
-    
     
         return 0;
 }
